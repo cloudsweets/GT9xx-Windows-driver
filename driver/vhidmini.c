@@ -2115,16 +2115,19 @@ GoodixRead(
     if (readLen == 0 || readBuf == NULL)
         return;
 
-    PUINT8 TxBuf = (PUINT8)ExAllocatePool2(
-        POOL_FLAG_NON_PAGED,
+    PUINT8 TxBuf = (PUINT8)ExAllocatePoolWithTag(
+        NonPagedPool,
         2,
         TOUCH_POOL_TAG
     );
-    PUINT8 RxBuf = (PUINT8)ExAllocatePool2(
-        POOL_FLAG_NON_PAGED,
+    PUINT8 RxBuf = (PUINT8)ExAllocatePoolWithTag(
+        NonPagedPool,
         2 + readLen,
         TOUCH_POOL_TAG
     );
+
+    RtlZeroMemory(TxBuf, 2);
+    RtlZeroMemory(RxBuf, 2 + readLen);
 
     TxBuf[0] = (addr >> 8) & 0xFF;
     TxBuf[1] = addr & 0xFF;
@@ -2148,11 +2151,13 @@ GoodixWrite(
     if (writeLen == 0 || writeBuf == NULL)
         return;
 
-    UINT8* SpbBuf = (UINT8*)ExAllocatePool2(
-        POOL_FLAG_NON_PAGED,
+    UINT8* SpbBuf = (UINT8*)ExAllocatePoolWithTag(
+        NonPagedPool,
         writeLen + 2,
         TOUCH_POOL_TAG
     );
+
+    RtlZeroMemory(SpbBuf, writeLen + 2);
 
     SpbBuf[0] = (addr >> 8) & 0xFF;
     SpbBuf[1] = addr & 0xFF;
