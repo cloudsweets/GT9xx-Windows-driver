@@ -230,7 +230,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);..\..\inc;..</AdditionalIncludeDirectories>
       <ExceptionHandling>
       </ExceptionHandling>
-      <WppEnabled>false</WppEnabled>
+      <WppEnabled>true</WppEnabled>
       <WppTraceFunction>
       </WppTraceFunction>
       <WppScanConfigurationData>trace.h</WppScanConfigurationData>

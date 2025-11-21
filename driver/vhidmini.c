@@ -17,6 +17,8 @@ Environment:
 --*/
 #include "vhidmini.h"
 
+#define DEBUG
+
 #ifdef DEBUG
 #include "kmdf/trace.h"
 #include "vhidmini.tmh"
@@ -38,9 +40,9 @@ ULONG XRevert = 0;
 ULONG YRevert = 0;
 ULONG XYExchange = 0;
 ULONG XMin = 0;
-ULONG XMax = 1080;
+ULONG XMax = 2560;
 ULONG YMin = 0;
-ULONG YMax = 2160;
+ULONG YMax = 1600;
 
 
 typedef struct
@@ -2070,7 +2072,7 @@ OnInterruptIsr(
         {
             touchId = (touchBuf[0 + i * 8] & 0x0F);
             x = (touchBuf[2 + i * 8] << 8) | touchBuf[1 + i * 8];
-            y = (UINT16)YMax - ((touchBuf[4 + i * 8] << 8) | touchBuf[3 + i * 8]);
+            y = (touchBuf[4 + i * 8] << 8) | touchBuf[3 + i * 8];
             readReport.points[i * 6 + 0] = 0x07;  // In Point
             readReport.points[i * 6 + 1] = touchId;
             readReport.points[i * 6 + 2] = x & 0xFF;
@@ -2200,6 +2202,7 @@ SpbDeviceOpen(
 
     if (!NT_SUCCESS(status))
     {
+        TraceEvents(TRACE_LEVEL_WARNING, TRACE_DEVICE, "I think there's a problem with DSDT");
     }
 
     //enable interrupt
